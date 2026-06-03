@@ -20,5 +20,24 @@ namespace Budget_App.ConsoleUI {
       }
       return line.Trim();
     }
+
+    public static BudgetType ReadBudgetType() {
+      Console.Write("Ваш выбор: ");
+      string line = Console.ReadLine();
+      if (line == null) {
+        return BudgetType.Unknown;
+      }
+      line = line.Trim();
+      if (line == "1") {
+        return BudgetType.Personal;
+      }
+      if (line == "2") {
+        return BudgetType.Family;
+      }
+      if (line == "3") {
+        return BudgetType.Business;
+      }
+      return BudgetType.Unknown;
+    }
   }
 }
