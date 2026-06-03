@@ -1,5 +1,6 @@
 using Budget_App.Data;
 using Budget_App.Services;
+using Budget_App.Stores;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace Budget_App.Tests.Services {
@@ -11,8 +12,9 @@ namespace Budget_App.Tests.Services {
       TestDatabaseHelper.InsertInactiveBudgetOnly(connectionString);
 
       BudgetRepository budgetRepository = new BudgetRepository(connectionString);
+      BudgetStore budgetStore = new SimpleBudgetStore();
       IRepository repository = new SqliteRepository(connectionString);
-      BudgetService budgetService = new BudgetService(budgetRepository);
+      BudgetService budgetService = new BudgetService(budgetRepository, budgetStore);
       ExpenseService expenseService = new ExpenseService(repository, budgetService);
 
       string errorMessage = "";
@@ -28,8 +30,9 @@ namespace Budget_App.Tests.Services {
       TestDatabaseHelper.InsertActiveBudget(connectionString, "TestBudget", 10000.0);
 
       BudgetRepository budgetRepository = new BudgetRepository(connectionString);
+      BudgetStore budgetStore = new SimpleBudgetStore();
       IRepository repository = new SqliteRepository(connectionString);
-      BudgetService budgetService = new BudgetService(budgetRepository);
+      BudgetService budgetService = new BudgetService(budgetRepository, budgetStore);
       ExpenseService expenseService = new ExpenseService(repository, budgetService);
 
       string errorMessage = "";

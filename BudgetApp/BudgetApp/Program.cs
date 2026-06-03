@@ -3,6 +3,7 @@ using Budget_App.ConsoleUI;
 using Budget_App.Controllers;
 using Budget_App.Data;
 using Budget_App.Services;
+using Budget_App.Stores;
 
 namespace Budget_App {
   internal class Program {
@@ -18,7 +19,8 @@ namespace Budget_App {
 
       BudgetRepository budgetRepository = new BudgetRepository(connectionString);
       IRepository repository = new SqliteRepository(connectionString);
-      BudgetService budgetService = new BudgetService(budgetRepository);
+      BudgetStore budgetStore = new SimpleBudgetStore();
+      BudgetService budgetService = new BudgetService(budgetRepository, budgetStore);
       BudgetController budgetController = new BudgetController(budgetService);
       IExpenseService expenseService = new ExpenseService(repository, budgetService);
       ExpenseController expenseController = new ExpenseController(expenseService);
@@ -44,13 +46,11 @@ namespace Budget_App {
 
         if (action == menuCodeCreateBudget) {
           budgetController.CreateBudget();
-          Console.WriteLine();
           continue;
         }
 
         if (action == menuCodeSelectBudget) {
           budgetController.SelectActiveBudget();
-          Console.WriteLine();
           continue;
         }
 

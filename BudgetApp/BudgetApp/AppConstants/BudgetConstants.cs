@@ -1,7 +1,16 @@
 namespace Budget_App.AppConstants {
   internal static class BudgetConstants {
-    public const int budgetTypePersonal = 1;
-    public const int budgetTypeFamily = 2;
-    public const int budgetTypeProject = 3;
+    public static readonly double PersonalDefaultLimit = 30000.0;
+    public static readonly double PersonalMaxLimit = 500000.0;
+
+    public static readonly double FamilyDefaultLimit = 80000.0;
+    public static readonly double FamilyMaxLimit = 1000000.0;
+
+    public static readonly double BusinessDefaultLimit = 150000.0;
+    public static readonly double BusinessMinLimit = 10000.0;
+    public static readonly double BusinessMaxLimit = 5000000.0;
+
+    public static readonly int BudgetPeriodMonths = 1;
+    public static readonly double NoCustomLimit = -1.0;
   }
 }

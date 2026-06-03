@@ -17,16 +17,19 @@ namespace Budget_App.Data {
         using (SQLiteCommand command = connection.CreateCommand()) {
           command.CommandText =
             "INSERT INTO Budgets (Name, Type, TotalLimit, PeriodStart, PeriodEnd, CreatedAt, IsActive) "
-            + "VALUES (@name, @type, @limit, @start, @end, @created, @active); "
+            + "VALUES ($name, $type, $limit, $start, $end, $created, $active); "
             + "SELECT last_insert_rowid();";
-          command.Parameters.AddWithValue("@name", budget.Name);
-          command.Parameters.AddWithValue("@type", budget.Type);
-          command.Parameters.AddWithValue("@limit", budget.TotalLimit);
-          command.Parameters.AddWithValue("@start", budget.PeriodStart.ToString("o"));
-          command.Parameters.AddWithValue("@end", budget.PeriodEnd.ToString("o"));
-          command.Parameters.AddWithValue("@created", budget.CreatedAt.ToString("o"));
-          int activeFlag = budget.IsActive ? 1 : 0;
-          command.Parameters.AddWithValue("@active", activeFlag);
+          command.Parameters.AddWithValue("$name", budget.Name);
+          command.Parameters.AddWithValue("$type", budget.Type);
+          command.Parameters.AddWithValue("$limit", budget.TotalLimit);
+          command.Parameters.AddWithValue("$start", budget.PeriodStart.ToString("O"));
+          command.Parameters.AddWithValue("$end", budget.PeriodEnd.ToString("O"));
+          command.Parameters.AddWithValue("$created", budget.CreatedAt.ToString("O"));
+          int activeFlag = 0;
+          if (budget.IsActive) {
+            activeFlag = 1;
+          }
+          command.Parameters.AddWithValue("$active", activeFlag);
           object result = command.ExecuteScalar();
           return Convert.ToInt32(result);
         }
@@ -34,7 +37,7 @@ namespace Budget_App.Data {
     }
 
     public List<Budget> GetAll() {
-      List<Budget> budgetList = new List<Budget>();
+      List<Budget> budgets = new List<Budget>();
       using (SQLiteConnection connection = new SQLiteConnection(connectionString)) {
         connection.Open();
         using (SQLiteCommand command = connection.CreateCommand()) {
@@ -43,13 +46,12 @@ namespace Budget_App.Data {
             + "FROM Budgets ORDER BY Id;";
           using (SQLiteDataReader reader = command.ExecuteReader()) {
             while (reader.Read()) {
-              Budget budget = ReadBudgetFromReader(reader);
-              budgetList.Add(budget);
+              budgets.Add(ReadBudget(reader));
             }
           }
         }
       }
-      return budgetList;
+      return budgets;
     }
 
     public Budget GetById(int budgetId) {
@@ -58,14 +60,29 @@ namespace Budget_App.Data {
         using (SQLiteCommand command = connection.CreateCommand()) {
           command.CommandText =
             "SELECT Id, Name, Type, TotalLimit, PeriodStart, PeriodEnd, CreatedAt, IsActive "
-            + "FROM Budgets WHERE Id = @id;";
-          command.Parameters.AddWithValue("@id", budgetId);
+            + "FROM Budgets WHERE Id = $id;";
+          command.Parameters.AddWithValue("$id", budgetId);
           using (SQLiteDataReader reader = command.ExecuteReader()) {
             if (!reader.Read()) {
               return null;
             }
-            return ReadBudgetFromReader(reader);
+            return ReadBudget(reader);
           }
+        }
+      }
+    }
+
+    public void SetActive(int budgetId) {
+      using (SQLiteConnection connection = new SQLiteConnection(connectionString)) {
+        connection.Open();
+        using (SQLiteCommand clearCommand = connection.CreateCommand()) {
+          clearCommand.CommandText = "UPDATE Budgets SET IsActive = 0;";
+          clearCommand.ExecuteNonQuery();
+        }
+        using (SQLiteCommand setCommand = connection.CreateCommand()) {
+          setCommand.CommandText = "UPDATE Budgets SET IsActive = 1 WHERE Id = $id;";
+          setCommand.Parameters.AddWithValue("$id", budgetId);
+          setCommand.ExecuteNonQuery();
         }
       }
     }
@@ -81,28 +98,13 @@ namespace Budget_App.Data {
             if (!reader.Read()) {
               return null;
             }
-            return ReadBudgetFromReader(reader);
+            return ReadBudget(reader);
           }
         }
       }
     }
 
-    public void SetActive(int budgetId) {
-      using (SQLiteConnection connection = new SQLiteConnection(connectionString)) {
-        connection.Open();
-        using (SQLiteCommand clearCommand = connection.CreateCommand()) {
-          clearCommand.CommandText = "UPDATE Budgets SET IsActive = 0;";
-          clearCommand.ExecuteNonQuery();
-        }
-        using (SQLiteCommand setCommand = connection.CreateCommand()) {
-          setCommand.CommandText = "UPDATE Budgets SET IsActive = 1 WHERE Id = @id;";
-          setCommand.Parameters.AddWithValue("@id", budgetId);
-          setCommand.ExecuteNonQuery();
-        }
-      }
-    }
-
-    private static Budget ReadBudgetFromReader(SQLiteDataReader reader) {
+    private static Budget ReadBudget(SQLiteDataReader reader) {
       Budget budget = new Budget();
       budget.Id = reader.GetInt32(0);
       budget.Name = reader.GetString(1);
@@ -111,8 +113,7 @@ namespace Budget_App.Data {
       budget.PeriodStart = DateTime.Parse(reader.GetString(4));
       budget.PeriodEnd = DateTime.Parse(reader.GetString(5));
       budget.CreatedAt = DateTime.Parse(reader.GetString(6));
-      int activeFlag = reader.GetInt32(7);
-      budget.IsActive = activeFlag != 0;
+      budget.IsActive = reader.GetInt32(7) == 1;
       return budget;
     }
   }
