@@ -3,43 +3,56 @@ using Budget_App.ConsoleUI;
 using Budget_App.Controllers;
 using Budget_App.Data;
 using Budget_App.Services;
+using Budget_App.Stores;
 
 namespace Budget_App {
   internal class Program {
-    private const string DatabaseFileName = "budgetapp.db";
+    private const string databaseFileName = "budgetapp.db";
 
     private static void Main(string[] args) {
       Console.OutputEncoding = System.Text.Encoding.UTF8;
       Console.Title = "BudgetApp";
 
-      string dbPath = System.IO.Path.Combine(AppDomain.CurrentDomain.BaseDirectory, DatabaseFileName);
+      string dbPath = System.IO.Path.Combine(AppDomain.CurrentDomain.BaseDirectory, databaseFileName);
       string connectionString = "Data Source=" + dbPath + ";Version=3;";
       DatabaseSchemaInitializer.EnsureCreated(connectionString);
 
       BudgetRepository budgetRepository = new BudgetRepository(connectionString);
-      BudgetService budgetService = new BudgetService(budgetRepository);
+      BudgetStore budgetStore = new SimpleBudgetStore();
+      BudgetService budgetService = new BudgetService(budgetRepository, budgetStore);
       BudgetController budgetController = new BudgetController(budgetService);
+
+      string menuCodeExit = ((int)MenuOption.Exit).ToString();
+      string menuCodeCreateBudget = ((int)MenuOption.CreateBudget).ToString();
+      string menuCodeSelectBudget = ((int)MenuOption.SelectActiveBudget).ToString();
+      string menuCodeAddExpense = ((int)MenuOption.AddExpense).ToString();
+      string menuCodeListExpenses = ((int)MenuOption.ListExpenses).ToString();
+      string menuCodeSavingsGoals = ((int)MenuOption.SavingsGoals).ToString();
+      string menuCodeAddSavings = ((int)MenuOption.AddToSavings).ToString();
+      string menuCodeBudgetReport = ((int)MenuOption.BudgetReport).ToString();
 
       while (true) {
         string action = ConsoleMenu.ReadAction();
         Console.WriteLine();
 
-        if (action == "0") {
+        if (action == menuCodeExit) {
           Console.WriteLine("До свидания!");
           return;
         }
 
-        if (action == "1") {
+        if (action == menuCodeCreateBudget) {
           budgetController.CreateBudget();
           continue;
         }
 
-        if (action == "2") {
+        if (action == menuCodeSelectBudget) {
           budgetController.SelectActiveBudget();
           continue;
         }
 
-        if (action == "3" || action == "4" || action == "5" || action == "6" || action == "7") {
+        if (action == menuCodeAddExpense || action == menuCodeListExpenses
+          || action == menuCodeSavingsGoals || action == menuCodeAddSavings
+          || action == menuCodeBudgetReport) {
           Console.WriteLine("Раздел в разработке.");
           Console.WriteLine();
           continue;

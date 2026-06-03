@@ -2,8 +2,8 @@ using Budget_App.Budgets;
 using Budget_App.ConsoleUI;
 
 namespace Budget_App.Stores {
-  internal static class BudgetFactory {
-    public static BudgetTemplate Create(BudgetType type) {
+  internal class SimpleBudgetStore : BudgetStore {
+    protected override BudgetTemplate CreateTemplate(BudgetType type) {
       switch (type) {
         case BudgetType.Personal:
           return new PersonalBudgetTemplate();

@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using Budget_App.AppConstants;
 using Budget_App.ConsoleUI;
 using Budget_App.Models;
@@ -33,7 +34,11 @@ namespace Budget_App.Controllers {
       double customLimit = BudgetConstants.NoCustomLimit;
       if (limitLine != null && limitLine.Trim().Length > 0) {
         double parsedLimit;
-        bool isParsed = double.TryParse(limitLine.Trim(), out parsedLimit);
+        bool isParsed = double.TryParse(
+          limitLine.Trim(),
+          NumberStyles.Any,
+          CultureInfo.InvariantCulture,
+          out parsedLimit);
         if (!isParsed) {
           Console.WriteLine("Неверный лимит.");
           Console.WriteLine();

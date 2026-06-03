@@ -8,15 +8,17 @@ using Budget_App.Models;
 using Budget_App.Stores;
 
 namespace Budget_App.Services {
-  internal class BudgetService {
+  internal class BudgetService : IBudgetService {
     private readonly BudgetRepository budgetRepository;
+    private readonly BudgetStore budgetStore;
 
-    public BudgetService(BudgetRepository budgetRepository) {
+    public BudgetService(BudgetRepository budgetRepository, BudgetStore budgetStore) {
       this.budgetRepository = budgetRepository;
+      this.budgetStore = budgetStore;
     }
 
     public Budget Create(string name, BudgetType type, double customLimit) {
-      BudgetTemplate template = BudgetFactory.Create(type);
+      BudgetTemplate template = budgetStore.GetTemplate(type);
       if (template == null) {
         return null;
       }
@@ -71,6 +73,11 @@ namespace Budget_App.Services {
 
     public Budget GetActive() {
       return budgetRepository.GetActive();
+    }
+
+    public Budget GetActiveBudget() {
+      Budget activeBudget = GetActive();
+      return activeBudget;
     }
   }
 }
