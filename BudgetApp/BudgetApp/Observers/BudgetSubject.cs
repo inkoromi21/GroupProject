@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 
 namespace Budget_App.Observers {
-  internal class BudgetSubject : IBudgetSubject {
+  public class BudgetSubject : IBudgetSubject {
     private readonly List<IBudgetObserver> observerList;
 
     public BudgetSubject() {

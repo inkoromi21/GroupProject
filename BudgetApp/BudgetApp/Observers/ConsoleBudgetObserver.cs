@@ -1,7 +1,7 @@
 using System;
 
 namespace Budget_App.Observers {
-  internal class ConsoleBudgetObserver : IBudgetObserver {
+  public class ConsoleBudgetObserver : IBudgetObserver {
     public void Update(BudgetEventArgs eventArgs) {
       if (eventArgs == null) {
         return;

@@ -1,5 +1,5 @@
 namespace Budget_App.Observers {
-  internal interface IBudgetSubject {
+  public interface IBudgetSubject {
     void Attach(IBudgetObserver observer);
 
     void Detach(IBudgetObserver observer);

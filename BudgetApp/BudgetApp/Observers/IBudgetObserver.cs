@@ -1,5 +1,5 @@
 namespace Budget_App.Observers {
-  internal interface IBudgetObserver {
+  public interface IBudgetObserver {
     void Update(BudgetEventArgs eventArgs);
   }
 }

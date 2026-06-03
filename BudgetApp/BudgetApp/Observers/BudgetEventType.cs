@@ -1,5 +1,5 @@
 namespace Budget_App.Observers {
-  internal enum BudgetEventType {
+  public enum BudgetEventType {
     BudgetCreated,
     ActiveBudgetChanged,
     ExpenseAdded,
