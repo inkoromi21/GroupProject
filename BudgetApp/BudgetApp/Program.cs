@@ -1,6 +1,8 @@
 using System;
 using Budget_App.ConsoleUI;
+using Budget_App.Controllers;
 using Budget_App.Data;
+using Budget_App.Services;
 
 namespace Budget_App {
   internal class Program {
@@ -14,6 +16,10 @@ namespace Budget_App {
       string connectionString = "Data Source=" + dbPath + ";Version=3;";
       DatabaseSchemaInitializer.EnsureCreated(connectionString);
 
+      BudgetRepository budgetRepository = new BudgetRepository(connectionString);
+      BudgetService budgetService = new BudgetService(budgetRepository);
+      BudgetController budgetController = new BudgetController(budgetService);
+
       while (true) {
         string action = ConsoleMenu.ReadAction();
         Console.WriteLine();
@@ -23,8 +29,17 @@ namespace Budget_App {
           return;
         }
 
-        if (action == "1" || action == "2" || action == "3" || action == "4"
-          || action == "5" || action == "6" || action == "7") {
+        if (action == "1") {
+          budgetController.CreateBudget();
+          continue;
+        }
+
+        if (action == "2") {
+          budgetController.SelectActiveBudget();
+          continue;
+        }
+
+        if (action == "3" || action == "4" || action == "5" || action == "6" || action == "7") {
           Console.WriteLine("Раздел в разработке.");
           Console.WriteLine();
           continue;
