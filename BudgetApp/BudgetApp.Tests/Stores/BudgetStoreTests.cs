@@ -1,4 +1,4 @@
-﻿using Budget_App.AppConstants;
+using Budget_App.AppConstants;
 using Budget_App.Budgets;
 using Budget_App.ConsoleUI;
 using Budget_App.Stores;

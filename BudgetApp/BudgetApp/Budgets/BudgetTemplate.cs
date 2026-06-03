@@ -1,4 +1,4 @@
-﻿namespace Budget_App.Budgets {
+namespace Budget_App.Budgets {
   internal abstract class BudgetTemplate {
     public abstract string GetDefaultName();
     public abstract double GetDefaultLimit();

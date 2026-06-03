@@ -1,4 +1,4 @@
-﻿using Budget_App.ConsoleUI;
+using Budget_App.ConsoleUI;
 using Budget_App.Data;
 using Budget_App.Models;
 using Budget_App.Services;

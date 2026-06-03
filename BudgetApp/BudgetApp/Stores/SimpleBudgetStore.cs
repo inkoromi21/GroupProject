@@ -1,4 +1,4 @@
-﻿using Budget_App.Budgets;
+using Budget_App.Budgets;
 using Budget_App.ConsoleUI;
 
 namespace Budget_App.Stores {

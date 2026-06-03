@@ -1,9 +1,9 @@
-﻿using Budget_App.AppConstants;
+using Budget_App.AppConstants;
 
 namespace Budget_App.Budgets {
   internal class FamilyBudgetTemplate : BudgetTemplate {
     public override string GetDefaultName() {
-      return "╨б╨╡╨╝╨╡╨╣╨╜╤Л╨╣ ╨▒╤О╨┤╨╢╨╡╤В";
+      return "Семейный бюджет";
     }
 
     public override double GetDefaultLimit() {
