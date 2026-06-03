@@ -4,9 +4,6 @@ using Budget_App.Data;
 using Budget_App.Models;
 
 namespace Budget_App.Services {
-  /// <summary>
-  /// Business logic for expense records.
-  /// </summary>
   internal class ExpenseService : IExpenseService {
     private readonly IRepository repository;
     private readonly IBudgetService budgetService;
@@ -16,22 +13,21 @@ namespace Budget_App.Services {
       this.budgetService = budgetService;
     }
 
-    /// <inheritdoc />
     public bool TryAddExpense(double amount, string categoryName, string description, out string errorMessage) {
       errorMessage = "";
       Budget activeBudget = budgetService.GetActiveBudget();
       if (activeBudget == null) {
-        errorMessage = "No active budget. Select an active budget first (menu item 2).";
+        errorMessage = "Нет активного бюджета. Сначала выберите бюджет (пункт 2).";
         return false;
       }
 
       if (amount <= 0.0) {
-        errorMessage = "Amount must be greater than zero.";
+        errorMessage = "Сумма должна быть больше нуля.";
         return false;
       }
 
       if (string.IsNullOrWhiteSpace(categoryName)) {
-        errorMessage = "Category name is required.";
+        errorMessage = "Укажите категорию расхода.";
         return false;
       }
 
@@ -42,12 +38,10 @@ namespace Budget_App.Services {
       expense.Date = DateTime.Now;
       expense.Description = description == null ? "" : description.Trim();
 
-      int newId = repository.AddExpense(expense);
-      expense.Id = newId;
+      repository.AddExpense(expense);
       return true;
     }
 
-    /// <inheritdoc />
     public List<Expense> GetExpensesForActiveBudget() {
       Budget activeBudget = budgetService.GetActiveBudget();
       if (activeBudget == null) {
@@ -57,29 +51,28 @@ namespace Budget_App.Services {
       return expenseList;
     }
 
-    /// <inheritdoc />
     public bool TryDeleteExpense(int expenseId, out string errorMessage) {
       errorMessage = "";
       Budget activeBudget = budgetService.GetActiveBudget();
       if (activeBudget == null) {
-        errorMessage = "No active budget. Select an active budget first (menu item 2).";
+        errorMessage = "Нет активного бюджета. Сначала выберите бюджет (пункт 2).";
         return false;
       }
 
       Expense expense = repository.GetExpenseById(expenseId);
       if (expense == null) {
-        errorMessage = "Expense not found.";
+        errorMessage = "Расход не найден.";
         return false;
       }
 
       if (expense.BudgetId != activeBudget.Id) {
-        errorMessage = "Expense belongs to another budget.";
+        errorMessage = "Расход относится к другому бюджету.";
         return false;
       }
 
       bool deleted = repository.DeleteExpense(expenseId);
       if (!deleted) {
-        errorMessage = "Could not delete expense.";
+        errorMessage = "Не удалось удалить расход.";
         return false;
       }
       return true;

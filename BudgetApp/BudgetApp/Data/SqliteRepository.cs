@@ -4,9 +4,6 @@ using System.Data.SQLite;
 using Budget_App.Models;
 
 namespace Budget_App.Data {
-  /// <summary>
-  /// SQLite storage for budgets, expenses, and savings goals.
-  /// </summary>
   internal class SqliteRepository : IRepository {
     private readonly string connectionString;
 
@@ -14,7 +11,6 @@ namespace Budget_App.Data {
       this.connectionString = connectionString;
     }
 
-    /// <inheritdoc />
     public Budget GetActiveBudget() {
       using (SQLiteConnection connection = new SQLiteConnection(connectionString)) {
         connection.Open();
@@ -32,7 +28,6 @@ namespace Budget_App.Data {
       }
     }
 
-    /// <inheritdoc />
     public Budget GetBudgetById(int budgetId) {
       using (SQLiteConnection connection = new SQLiteConnection(connectionString)) {
         connection.Open();
@@ -51,7 +46,6 @@ namespace Budget_App.Data {
       }
     }
 
-    /// <inheritdoc />
     public List<Budget> GetAllBudgets() {
       List<Budget> budgetList = new List<Budget>();
       using (SQLiteConnection connection = new SQLiteConnection(connectionString)) {
@@ -71,7 +65,6 @@ namespace Budget_App.Data {
       return budgetList;
     }
 
-    /// <inheritdoc />
     public int AddExpense(Expense expense) {
       using (SQLiteConnection connection = new SQLiteConnection(connectionString)) {
         connection.Open();
@@ -91,7 +84,6 @@ namespace Budget_App.Data {
       }
     }
 
-    /// <inheritdoc />
     public List<Expense> GetExpensesByBudgetId(int budgetId) {
       List<Expense> expenseList = new List<Expense>();
       using (SQLiteConnection connection = new SQLiteConnection(connectionString)) {
@@ -112,7 +104,6 @@ namespace Budget_App.Data {
       return expenseList;
     }
 
-    /// <inheritdoc />
     public Expense GetExpenseById(int expenseId) {
       using (SQLiteConnection connection = new SQLiteConnection(connectionString)) {
         connection.Open();
@@ -131,7 +122,6 @@ namespace Budget_App.Data {
       }
     }
 
-    /// <inheritdoc />
     public bool DeleteExpense(int expenseId) {
       using (SQLiteConnection connection = new SQLiteConnection(connectionString)) {
         connection.Open();
@@ -144,7 +134,6 @@ namespace Budget_App.Data {
       }
     }
 
-    /// <inheritdoc />
     public List<SavingsGoal> GetSavingsGoalsByBudgetId(int budgetId) {
       List<SavingsGoal> goalList = new List<SavingsGoal>();
       using (SQLiteConnection connection = new SQLiteConnection(connectionString)) {

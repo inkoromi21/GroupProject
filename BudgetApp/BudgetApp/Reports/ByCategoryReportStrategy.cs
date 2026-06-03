@@ -3,19 +3,17 @@ using System.Text;
 using Budget_App.Models;
 
 namespace Budget_App.Reports {
-  /// <summary>
-  /// Report with totals grouped by expense category.
-  /// </summary>
   internal class ByCategoryReportStrategy : IReportStrategy {
-    /// <inheritdoc />
     public string Generate(ReportData data) {
       if (data == null || data.Budget == null) {
-        return "No budget data for report.";
+        return "Нет данных бюджета для отчёта.";
       }
 
       StringBuilder builder = new StringBuilder();
-      builder.AppendLine("========== REPORT BY CATEGORY ==========");
-      builder.AppendLine("Budget: " + data.Budget.Name);
+      builder.AppendLine("========== ОТЧЁТ ПО КАТЕГОРИЯМ ==========");
+      builder.AppendLine("Бюджет: " + data.Budget.Name);
+      builder.AppendLine("----------------------------------------");
+      builder.AppendLine("Категория          | Сумма");
       builder.AppendLine("----------------------------------------");
 
       List<string> categoryNameList = new List<string>();
@@ -40,12 +38,14 @@ namespace Budget_App.Reports {
       for (int categoryIndex = 0; categoryIndex < categoryCount; categoryIndex++) {
         string categoryName = categoryNameList[categoryIndex];
         double categoryTotal = categoryTotalList[categoryIndex];
-        builder.AppendLine(categoryName + " : " + categoryTotal.ToString("0.00"));
+        string totalText = ReportTextHelper.FormatMoney(categoryTotal);
+        builder.AppendLine(categoryName + " | " + totalText);
         grandTotal = grandTotal + categoryTotal;
       }
 
       builder.AppendLine("----------------------------------------");
-      builder.AppendLine("Grand total: " + grandTotal.ToString("0.00"));
+      string grandTotalText = ReportTextHelper.FormatMoney(grandTotal);
+      builder.AppendLine("Общий итог: " + grandTotalText);
       builder.AppendLine("========================================");
       return builder.ToString();
     }

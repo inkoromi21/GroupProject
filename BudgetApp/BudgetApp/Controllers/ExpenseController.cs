@@ -1,10 +1,10 @@
 using System;
+using System.Collections.Generic;
+using System.Globalization;
+using Budget_App.Models;
 using Budget_App.Services;
 
 namespace Budget_App.Controllers {
-  /// <summary>
-  /// Console flow for expense menu items.
-  /// </summary>
   internal class ExpenseController {
     private readonly IExpenseService expenseService;
 
@@ -12,21 +12,18 @@ namespace Budget_App.Controllers {
       this.expenseService = expenseService;
     }
 
-    /// <summary>
-    /// Menu item 3: add expense.
-    /// </summary>
     public void AddExpense() {
-      Console.Write("Amount: ");
+      Console.Write("Сумма: ");
       string amountLine = Console.ReadLine();
       double amount = 0.0;
-      if (!double.TryParse(amountLine, out amount)) {
-        Console.WriteLine("Invalid amount.");
+      if (!double.TryParse(amountLine, NumberStyles.Any, CultureInfo.InvariantCulture, out amount)) {
+        Console.WriteLine("Неверная сумма.");
         return;
       }
 
-      Console.Write("Category: ");
+      Console.Write("Категория: ");
       string categoryName = Console.ReadLine();
-      Console.Write("Description: ");
+      Console.Write("Описание: ");
       string description = Console.ReadLine();
 
       string errorMessage = "";
@@ -35,25 +32,22 @@ namespace Budget_App.Controllers {
         Console.WriteLine(errorMessage);
         return;
       }
-      Console.WriteLine("Expense saved.");
+      Console.WriteLine("Расход сохранён.");
     }
 
-    /// <summary>
-    /// Menu item 4: list expenses and optional delete.
-    /// </summary>
     public void ListExpenses() {
-      System.Collections.Generic.List<Budget_App.Models.Expense> expenseList =
-        expenseService.GetExpensesForActiveBudget();
+      List<Expense> expenseList = expenseService.GetExpensesForActiveBudget();
       if (expenseList.Count == 0) {
-        Console.WriteLine("No expenses for the active budget.");
+        Console.WriteLine("Нет расходов по активному бюджету.");
         return;
       }
 
       double listTotal = 0.0;
       int expenseCount = expenseList.Count;
-      Console.WriteLine("--- Expense list ---");
+      Console.WriteLine("--- Список расходов ---");
       for (int expenseIndex = 0; expenseIndex < expenseCount; expenseIndex++) {
-        Budget_App.Models.Expense expense = expenseList[expenseIndex];
+        Expense expense = expenseList[expenseIndex];
+        string amountText = expense.Amount.ToString("0.00", CultureInfo.InvariantCulture);
         Console.WriteLine(
           expense.Id
           + ") "
@@ -61,14 +55,15 @@ namespace Budget_App.Controllers {
           + " | "
           + expense.CategoryName
           + " | "
-          + expense.Amount.ToString("0.00")
+          + amountText
           + " | "
           + expense.Description);
         listTotal = listTotal + expense.Amount;
       }
-      Console.WriteLine("Total: " + listTotal.ToString("0.00"));
+      string totalText = listTotal.ToString("0.00", CultureInfo.InvariantCulture);
+      Console.WriteLine("Итого: " + totalText);
 
-      Console.Write("Delete by id (Enter to skip): ");
+      Console.Write("Удалить по id (Enter — пропустить): ");
       string idLine = Console.ReadLine();
       if (string.IsNullOrWhiteSpace(idLine)) {
         return;
@@ -76,7 +71,7 @@ namespace Budget_App.Controllers {
 
       int expenseId = 0;
       if (!int.TryParse(idLine, out expenseId)) {
-        Console.WriteLine("Invalid id.");
+        Console.WriteLine("Неверный id.");
         return;
       }
 
@@ -86,7 +81,7 @@ namespace Budget_App.Controllers {
         Console.WriteLine(deleteError);
         return;
       }
-      Console.WriteLine("Expense deleted.");
+      Console.WriteLine("Расход удалён.");
     }
   }
 }

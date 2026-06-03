@@ -2,9 +2,6 @@ using System.Collections.Generic;
 using Budget_App.Models;
 
 namespace Budget_App.Data {
-  /// <summary>
-  /// Data access for budgets, expenses, and savings goals.
-  /// </summary>
   internal interface IRepository {
     Budget GetActiveBudget();
 

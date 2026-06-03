@@ -1,16 +1,11 @@
-using System.Globalization;
 using System.Text;
 using Budget_App.Models;
 
 namespace Budget_App.Reports {
-  /// <summary>
-  /// Short summary: limit, spent, balance.
-  /// </summary>
   internal class SummaryReportStrategy : IReportStrategy {
-    /// <inheritdoc />
     public string Generate(ReportData data) {
       if (data == null || data.Budget == null) {
-        return "No budget data for report.";
+        return "Нет данных бюджета для отчёта.";
       }
 
       double spentTotal = 0.0;
@@ -24,11 +19,11 @@ namespace Budget_App.Reports {
       double balanceAmount = limitAmount - spentTotal;
 
       StringBuilder builder = new StringBuilder();
-      builder.AppendLine("========== SUMMARY REPORT ==========");
-      builder.AppendLine("Budget: " + data.Budget.Name);
-      builder.AppendLine("Limit: " + limitAmount.ToString("0.00", CultureInfo.InvariantCulture));
-      builder.AppendLine("Spent: " + spentTotal.ToString("0.00", CultureInfo.InvariantCulture));
-      builder.AppendLine("Balance: " + balanceAmount.ToString("0.00", CultureInfo.InvariantCulture));
+      builder.AppendLine("========== СВОДНЫЙ ОТЧЁТ ==========");
+      builder.AppendLine("Бюджет: " + data.Budget.Name);
+      builder.AppendLine("Лимит: " + ReportTextHelper.FormatMoney(limitAmount));
+      builder.AppendLine("Потрачено: " + ReportTextHelper.FormatMoney(spentTotal));
+      builder.AppendLine("Остаток: " + ReportTextHelper.FormatMoney(balanceAmount));
       builder.AppendLine("==================================");
       return builder.ToString();
     }
