@@ -18,9 +18,13 @@ namespace Budget_App {
       DatabaseSchemaInitializer.EnsureCreated(connectionString);
 
       BudgetRepository budgetRepository = new BudgetRepository(connectionString);
+      IRepository repository = new SqliteRepository(connectionString);
       BudgetStore budgetStore = new SimpleBudgetStore();
       BudgetService budgetService = new BudgetService(budgetRepository, budgetStore);
       BudgetController budgetController = new BudgetController(budgetService);
+      IExpenseService expenseService = new ExpenseService(repository, budgetService);
+      ExpenseController expenseController = new ExpenseController(expenseService);
+      ReportController reportController = new ReportController(repository, budgetService);
 
       string menuCodeExit = ((int)MenuOption.Exit).ToString();
       string menuCodeCreateBudget = ((int)MenuOption.CreateBudget).ToString();
@@ -50,9 +54,25 @@ namespace Budget_App {
           continue;
         }
 
-        if (action == menuCodeAddExpense || action == menuCodeListExpenses
-          || action == menuCodeSavingsGoals || action == menuCodeAddSavings
-          || action == menuCodeBudgetReport) {
+        if (action == menuCodeAddExpense) {
+          expenseController.AddExpense();
+          Console.WriteLine();
+          continue;
+        }
+
+        if (action == menuCodeListExpenses) {
+          expenseController.ListExpenses();
+          Console.WriteLine();
+          continue;
+        }
+
+        if (action == menuCodeBudgetReport) {
+          reportController.ShowReportMenu();
+          Console.WriteLine();
+          continue;
+        }
+
+        if (action == menuCodeSavingsGoals || action == menuCodeAddSavings) {
           Console.WriteLine("Раздел в разработке.");
           Console.WriteLine();
           continue;

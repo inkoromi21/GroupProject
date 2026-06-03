@@ -1,9 +1,8 @@
-using System.Reflection;
+﻿using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 
 [assembly: InternalsVisibleTo("BudgetApp.Tests")]
-
 [assembly: AssemblyTitle("BudgetApp")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
