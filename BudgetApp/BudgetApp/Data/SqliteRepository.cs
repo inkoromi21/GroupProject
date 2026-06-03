@@ -11,60 +11,6 @@ namespace Budget_App.Data {
       this.connectionString = connectionString;
     }
 
-    public Budget GetActiveBudget() {
-      using (SQLiteConnection connection = new SQLiteConnection(connectionString)) {
-        connection.Open();
-        using (SQLiteCommand command = connection.CreateCommand()) {
-          command.CommandText =
-            "SELECT Id, Name, Type, TotalLimit, PeriodStart, PeriodEnd, CreatedAt, IsActive "
-            + "FROM Budgets WHERE IsActive = 1 LIMIT 1;";
-          using (SQLiteDataReader reader = command.ExecuteReader()) {
-            if (!reader.Read()) {
-              return null;
-            }
-            return ReadBudgetFromReader(reader);
-          }
-        }
-      }
-    }
-
-    public Budget GetBudgetById(int budgetId) {
-      using (SQLiteConnection connection = new SQLiteConnection(connectionString)) {
-        connection.Open();
-        using (SQLiteCommand command = connection.CreateCommand()) {
-          command.CommandText =
-            "SELECT Id, Name, Type, TotalLimit, PeriodStart, PeriodEnd, CreatedAt, IsActive "
-            + "FROM Budgets WHERE Id = @id;";
-          command.Parameters.AddWithValue("@id", budgetId);
-          using (SQLiteDataReader reader = command.ExecuteReader()) {
-            if (!reader.Read()) {
-              return null;
-            }
-            return ReadBudgetFromReader(reader);
-          }
-        }
-      }
-    }
-
-    public List<Budget> GetAllBudgets() {
-      List<Budget> budgetList = new List<Budget>();
-      using (SQLiteConnection connection = new SQLiteConnection(connectionString)) {
-        connection.Open();
-        using (SQLiteCommand command = connection.CreateCommand()) {
-          command.CommandText =
-            "SELECT Id, Name, Type, TotalLimit, PeriodStart, PeriodEnd, CreatedAt, IsActive "
-            + "FROM Budgets ORDER BY Id;";
-          using (SQLiteDataReader reader = command.ExecuteReader()) {
-            while (reader.Read()) {
-              Budget budget = ReadBudgetFromReader(reader);
-              budgetList.Add(budget);
-            }
-          }
-        }
-      }
-      return budgetList;
-    }
-
     public int AddExpense(Expense expense) {
       using (SQLiteConnection connection = new SQLiteConnection(connectionString)) {
         connection.Open();
@@ -152,20 +98,6 @@ namespace Budget_App.Data {
         }
       }
       return goalList;
-    }
-
-    private static Budget ReadBudgetFromReader(SQLiteDataReader reader) {
-      Budget budget = new Budget();
-      budget.Id = reader.GetInt32(0);
-      budget.Name = reader.GetString(1);
-      budget.Type = reader.GetString(2);
-      budget.TotalLimit = reader.GetDouble(3);
-      budget.PeriodStart = DateTime.Parse(reader.GetString(4));
-      budget.PeriodEnd = DateTime.Parse(reader.GetString(5));
-      budget.CreatedAt = DateTime.Parse(reader.GetString(6));
-      int activeFlag = reader.GetInt32(7);
-      budget.IsActive = activeFlag != 0;
-      return budget;
     }
 
     private static Expense ReadExpenseFromReader(SQLiteDataReader reader) {

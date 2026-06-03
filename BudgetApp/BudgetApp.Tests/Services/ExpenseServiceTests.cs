@@ -10,8 +10,9 @@ namespace Budget_App.Tests.Services {
       string connectionString = TestDatabaseHelper.CreateTempDatabase();
       TestDatabaseHelper.InsertInactiveBudgetOnly(connectionString);
 
+      BudgetRepository budgetRepository = new BudgetRepository(connectionString);
       IRepository repository = new SqliteRepository(connectionString);
-      IBudgetService budgetService = new BudgetService(repository);
+      BudgetService budgetService = new BudgetService(budgetRepository);
       ExpenseService expenseService = new ExpenseService(repository, budgetService);
 
       string errorMessage = "";
@@ -26,8 +27,9 @@ namespace Budget_App.Tests.Services {
       string connectionString = TestDatabaseHelper.CreateTempDatabase();
       TestDatabaseHelper.InsertActiveBudget(connectionString, "TestBudget", 10000.0);
 
+      BudgetRepository budgetRepository = new BudgetRepository(connectionString);
       IRepository repository = new SqliteRepository(connectionString);
-      IBudgetService budgetService = new BudgetService(repository);
+      BudgetService budgetService = new BudgetService(budgetRepository);
       ExpenseService expenseService = new ExpenseService(repository, budgetService);
 
       string errorMessage = "";
