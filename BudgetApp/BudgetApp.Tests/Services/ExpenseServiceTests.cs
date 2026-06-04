@@ -14,8 +14,8 @@ namespace Budget_App.Tests.Services {
       BudgetRepository budgetRepository = new BudgetRepository(connectionString);
       BudgetStore budgetStore = new SimpleBudgetStore();
       IRepository repository = new SqliteRepository(connectionString);
-      BudgetService budgetService = new BudgetService(budgetRepository, budgetStore);
-      ExpenseService expenseService = new ExpenseService(repository, budgetService);
+      BudgetService budgetService = new BudgetService(budgetRepository, budgetStore, null);
+      ExpenseService expenseService = new ExpenseService(repository, budgetService, null);
 
       string errorMessage = "";
       bool saved = expenseService.TryAddExpense(100.0, "Food", "test", out errorMessage);
@@ -32,8 +32,8 @@ namespace Budget_App.Tests.Services {
       BudgetRepository budgetRepository = new BudgetRepository(connectionString);
       BudgetStore budgetStore = new SimpleBudgetStore();
       IRepository repository = new SqliteRepository(connectionString);
-      BudgetService budgetService = new BudgetService(budgetRepository, budgetStore);
-      ExpenseService expenseService = new ExpenseService(repository, budgetService);
+      BudgetService budgetService = new BudgetService(budgetRepository, budgetStore, null);
+      ExpenseService expenseService = new ExpenseService(repository, budgetService, null);
 
       string errorMessage = "";
       bool saved = expenseService.TryAddExpense(250.0, "Transport", "bus", out errorMessage);

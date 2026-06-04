@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Data.SQLite;
 using System.IO;
 using Budget_App.Data;
@@ -6,8 +6,15 @@ using Budget_App.Data;
 namespace Budget_App.Tests {
   internal static class TestDatabaseHelper {
     public static string CreateTempDatabase() {
-      string filePath = Path.Combine(Path.GetTempPath(), "budgetapp_test_" + Guid.NewGuid().ToString("N") + ".db");
-      string connectionString = "Data Source=" + filePath + ";Version=3;";
+      string fileName;
+      fileName = Guid.NewGuid().ToString("N");
+
+      string filePath;
+      filePath = Path.Combine(Path.GetTempPath(), "budgetapp_test_" + fileName + ".db");
+
+      string connectionString;
+      connectionString = "Data Source=" + filePath + ";Version=3;";
+
       DatabaseSchemaInitializer.EnsureCreated(connectionString);
       return connectionString;
     }
@@ -16,9 +23,15 @@ namespace Budget_App.Tests {
       using (SQLiteConnection connection = new SQLiteConnection(connectionString)) {
         connection.Open();
         using (SQLiteCommand command = connection.CreateCommand()) {
-          DateTime periodStart = new DateTime(2026, 1, 1);
-          DateTime periodEnd = new DateTime(2026, 12, 31);
-          DateTime createdAt = DateTime.UtcNow;
+          DateTime periodStart;
+          periodStart = new DateTime(2026, 1, 1);
+
+          DateTime periodEnd;
+          periodEnd = new DateTime(2026, 12, 31);
+
+          DateTime createdAt;
+          createdAt = DateTime.UtcNow;
+
           command.CommandText =
             "INSERT INTO Budgets (Name, Type, TotalLimit, PeriodStart, PeriodEnd, CreatedAt, IsActive) "
             + "VALUES ($name, $type, $limit, $start, $end, $created, 1);";
@@ -37,15 +50,27 @@ namespace Budget_App.Tests {
       using (SQLiteConnection connection = new SQLiteConnection(connectionString)) {
         connection.Open();
         using (SQLiteCommand command = connection.CreateCommand()) {
-          DateTime periodStart = new DateTime(2026, 1, 1);
-          DateTime periodEnd = new DateTime(2026, 12, 31);
-          DateTime createdAt = DateTime.UtcNow;
+          DateTime periodStart;
+          periodStart = new DateTime(2026, 1, 1);
+
+          DateTime periodEnd;
+          periodEnd = new DateTime(2026, 12, 31);
+
+          DateTime createdAt;
+          createdAt = DateTime.UtcNow;
+
+          string budgetName;
+          budgetName = "Inactive";
+
+          double budgetLimit;
+          budgetLimit = 5000.0;
+
           command.CommandText =
             "INSERT INTO Budgets (Name, Type, TotalLimit, PeriodStart, PeriodEnd, CreatedAt, IsActive) "
             + "VALUES ($name, $type, $limit, $start, $end, $created, 0);";
-          command.Parameters.AddWithValue("$name", "Inactive");
+          command.Parameters.AddWithValue("$name", budgetName);
           command.Parameters.AddWithValue("$type", "Personal");
-          command.Parameters.AddWithValue("$limit", 5000.0);
+          command.Parameters.AddWithValue("$limit", budgetLimit);
           command.Parameters.AddWithValue("$start", periodStart.ToString("O"));
           command.Parameters.AddWithValue("$end", periodEnd.ToString("O"));
           command.Parameters.AddWithValue("$created", createdAt.ToString("O"));

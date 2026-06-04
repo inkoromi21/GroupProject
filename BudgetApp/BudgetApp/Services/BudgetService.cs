@@ -5,20 +5,27 @@ using Budget_App.Budgets;
 using Budget_App.ConsoleUI;
 using Budget_App.Data;
 using Budget_App.Models;
+using Budget_App.Observers;
 using Budget_App.Stores;
 
 namespace Budget_App.Services {
   internal class BudgetService : IBudgetService {
     private readonly BudgetRepository budgetRepository;
     private readonly BudgetStore budgetStore;
+    private readonly IBudgetSubject budgetSubject;
 
-    public BudgetService(BudgetRepository budgetRepository, BudgetStore budgetStore) {
+    public BudgetService(
+      BudgetRepository budgetRepository,
+      BudgetStore budgetStore,
+      IBudgetSubject budgetSubject) {
       this.budgetRepository = budgetRepository;
       this.budgetStore = budgetStore;
+      this.budgetSubject = budgetSubject;
     }
 
     public Budget Create(string name, BudgetType type, double customLimit) {
-      BudgetTemplate template = budgetStore.GetTemplate(type);
+      BudgetTemplate template;
+      template = budgetStore.GetTemplate(type);
       if (template == null) {
         return null;
       }
@@ -41,10 +48,14 @@ namespace Budget_App.Services {
         budgetName = name.Trim();
       }
 
-      DateTime periodStart = DateTime.Today;
-      DateTime periodEnd = periodStart.AddMonths(BudgetConstants.BudgetPeriodMonths);
+      DateTime periodStart;
+      periodStart = DateTime.Today;
 
-      Budget budget = new Budget();
+      DateTime periodEnd;
+      periodEnd = periodStart.AddMonths(BudgetConstants.BudgetPeriodMonths);
+
+      Budget budget;
+      budget = new Budget();
       budget.Name = budgetName;
       budget.Type = type.ToString();
       budget.TotalLimit = limit;
@@ -53,30 +64,58 @@ namespace Budget_App.Services {
       budget.CreatedAt = DateTime.UtcNow;
       budget.IsActive = false;
 
-      int newId = budgetRepository.Add(budget);
+      int newId;
+      newId = budgetRepository.Add(budget);
       budget.Id = newId;
+
+      if (budgetSubject != null) {
+        BudgetEventArgs eventArgs;
+        eventArgs = new BudgetEventArgs();
+        eventArgs.message = "Создан бюджет: " + budget.Name;
+        eventArgs.budgetId = budget.Id;
+        eventArgs.eventType = BudgetEventType.BudgetCreated;
+        budgetSubject.Notify(eventArgs);
+      }
+
       return budget;
     }
 
     public List<Budget> GetAll() {
-      return budgetRepository.GetAll();
+      List<Budget> budgetList;
+      budgetList = budgetRepository.GetAll();
+      return budgetList;
     }
 
     public bool SetActive(int budgetId) {
-      Budget existing = budgetRepository.GetById(budgetId);
+      Budget existing;
+      existing = budgetRepository.GetById(budgetId);
       if (existing == null) {
         return false;
       }
+
       budgetRepository.SetActive(budgetId);
+
+      if (budgetSubject != null) {
+        BudgetEventArgs eventArgs;
+        eventArgs = new BudgetEventArgs();
+        eventArgs.message = "Активный бюджет: Id=" + budgetId;
+        eventArgs.budgetId = budgetId;
+        eventArgs.eventType = BudgetEventType.ActiveBudgetChanged;
+        budgetSubject.Notify(eventArgs);
+      }
+
       return true;
     }
 
     public Budget GetActive() {
-      return budgetRepository.GetActive();
+      Budget activeBudget;
+      activeBudget = budgetRepository.GetActive();
+      return activeBudget;
     }
 
     public Budget GetActiveBudget() {
-      Budget activeBudget = GetActive();
+      Budget activeBudget;
+      activeBudget = GetActive();
       return activeBudget;
     }
   }

@@ -13,7 +13,7 @@ namespace Budget_App.Tests.Services {
       string connectionString = TestDatabaseHelper.CreateTempDatabase();
       BudgetRepository budgetRepository = new BudgetRepository(connectionString);
       BudgetStore budgetStore = new SimpleBudgetStore();
-      BudgetService budgetService = new BudgetService(budgetRepository, budgetStore);
+      BudgetService budgetService = new BudgetService(budgetRepository, budgetStore, null);
 
       Budget created = budgetService.Create("TestBudget", BudgetType.Personal, 50000.0);
       Assert.IsNotNull(created);
@@ -27,7 +27,7 @@ namespace Budget_App.Tests.Services {
       string connectionString = TestDatabaseHelper.CreateTempDatabase();
       BudgetRepository budgetRepository = new BudgetRepository(connectionString);
       BudgetStore budgetStore = new SimpleBudgetStore();
-      BudgetService budgetService = new BudgetService(budgetRepository, budgetStore);
+      BudgetService budgetService = new BudgetService(budgetRepository, budgetStore, null);
 
       Budget created = budgetService.Create("", BudgetType.Family, -1.0);
       bool isSet = budgetService.SetActive(created.Id);
