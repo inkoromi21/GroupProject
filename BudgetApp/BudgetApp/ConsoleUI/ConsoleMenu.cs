@@ -3,6 +3,7 @@ using System;
 namespace Budget_App.ConsoleUI {
   internal static class ConsoleMenu {
     public static string ReadAction() {
+      Console.Clear();
       Console.WriteLine("=== BUDGET APP ===");
       Console.WriteLine("Выберите действие:");
       Console.WriteLine("1) Создать бюджет");

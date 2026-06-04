@@ -21,6 +21,7 @@ namespace Budget_App.Controllers {
 
     public void ShowReportMenu() {
       while (true) {
+        Console.Clear();
         Console.WriteLine("--- Бюджетный отчёт ---");
         Console.WriteLine("1) За период");
         Console.WriteLine("2) По категориям");
@@ -38,6 +39,7 @@ namespace Budget_App.Controllers {
         }
 
         if (choice == reportChoiceMonthly || choice == reportChoiceByCategory || choice == reportChoiceSummary) {
+          Console.Clear();
           RunReport(choice);
           Console.WriteLine();
           continue;

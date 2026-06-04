@@ -97,6 +97,8 @@ namespace Budget_App {
           return;
         }
 
+        Console.Clear();
+
         if (action == menuCodeCreateBudget) {
           budgetController.CreateBudget();
           continue;

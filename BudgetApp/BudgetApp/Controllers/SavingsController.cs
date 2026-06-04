@@ -18,6 +18,7 @@ namespace Budget_App.Controllers {
       string menuCodeList = "2";
 
       while (true) {
+        Console.Clear();
         Console.WriteLine("--- Цели сбережений ---");
         Console.WriteLine("1) Создать цель");
         Console.WriteLine("2) Список целей");
@@ -38,11 +39,13 @@ namespace Budget_App.Controllers {
         }
 
         if (choice == menuCodeCreate) {
+          Console.Clear();
           CreateGoal();
           continue;
         }
 
         if (choice == menuCodeList) {
+          Console.Clear();
           PrintGoalList();
           continue;
         }
