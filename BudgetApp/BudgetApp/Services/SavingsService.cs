@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using Budget_App.Data;
 using Budget_App.Models;
 using Budget_App.Observers;
@@ -97,7 +98,9 @@ namespace Budget_App.Services {
       if (newAmount > goal.TargetAmount) {
         double leftToGoal;
         leftToGoal = goal.TargetAmount - goal.CurrentAmount;
-        errorMessage = "Слишком много. Осталось: " + leftToGoal.ToString("0.00");
+        string leftText;
+        leftText = leftToGoal.ToString("0.00", CultureInfo.InvariantCulture);
+        errorMessage = "Слишком много. Осталось: " + leftText;
         return false;
       }
 
@@ -114,7 +117,9 @@ namespace Budget_App.Services {
 
         BudgetEventArgs eventArgs;
         eventArgs = new BudgetEventArgs();
-        eventArgs.message = "Пополнено: " + goal.Name + ". Прогресс " + percent.ToString("0.0") + "%";
+        string percentText;
+        percentText = percent.ToString("0.0", CultureInfo.InvariantCulture);
+        eventArgs.message = "Пополнено: " + goal.Name + ". Прогресс " + percentText + "%";
         eventArgs.budgetId = activeBudget.Id;
         eventArgs.eventType = BudgetEventType.SavingsUpdated;
         budgetSubject.Notify(eventArgs);

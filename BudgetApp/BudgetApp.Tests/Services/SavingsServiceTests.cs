@@ -13,7 +13,13 @@ namespace Budget_App.Tests.Services {
       string connectionString;
       connectionString = TestDatabaseHelper.CreateTempDatabase();
 
-      TestDatabaseHelper.InsertActiveBudget(connectionString, "TestBudget", 10000.0);
+      string budgetName;
+      budgetName = "TestBudget";
+
+      double budgetLimit;
+      budgetLimit = 10000.0;
+
+      TestDatabaseHelper.InsertActiveBudget(connectionString, budgetName, budgetLimit);
 
       SavingsRepository savingsRepository;
       savingsRepository = new SavingsRepository(connectionString);
@@ -24,11 +30,17 @@ namespace Budget_App.Tests.Services {
       string errorMessage;
       errorMessage = "";
 
+      string goalName;
+      goalName = "Phone";
+
+      double targetAmount;
+      targetAmount = 3000.0;
+
       DateTime deadline;
       deadline = new DateTime(2026, 12, 1);
 
       bool isOk;
-      isOk = savingsService.TryCreateGoal("Phone", 3000.0, deadline, out errorMessage);
+      isOk = savingsService.TryCreateGoal(goalName, targetAmount, deadline, out errorMessage);
 
       Assert.IsTrue(isOk, errorMessage);
 
@@ -38,7 +50,10 @@ namespace Budget_App.Tests.Services {
       int goalCount;
       goalCount = goalList.Count;
 
-      Assert.AreEqual(1, goalCount);
+      int expectedCount;
+      expectedCount = 1;
+
+      Assert.AreEqual(expectedCount, goalCount);
     }
 
     [TestMethod]
@@ -46,7 +61,13 @@ namespace Budget_App.Tests.Services {
       string connectionString;
       connectionString = TestDatabaseHelper.CreateTempDatabase();
 
-      TestDatabaseHelper.InsertActiveBudget(connectionString, "TestBudget", 10000.0);
+      string budgetName;
+      budgetName = "TestBudget";
+
+      double budgetLimit;
+      budgetLimit = 10000.0;
+
+      TestDatabaseHelper.InsertActiveBudget(connectionString, budgetName, budgetLimit);
 
       SavingsRepository savingsRepository;
       savingsRepository = new SavingsRepository(connectionString);
@@ -57,19 +78,31 @@ namespace Budget_App.Tests.Services {
       string errorMessage;
       errorMessage = "";
 
+      string goalName;
+      goalName = "Phone";
+
+      double targetAmount;
+      targetAmount = 1000.0;
+
       DateTime deadline;
       deadline = new DateTime(2026, 12, 1);
 
-      savingsService.TryCreateGoal("Phone", 1000.0, deadline, out errorMessage);
+      savingsService.TryCreateGoal(goalName, targetAmount, deadline, out errorMessage);
 
       List<SavingsGoal> goalList;
       goalList = savingsService.GetGoalsForActiveBudget();
 
+      int firstGoalIndex;
+      firstGoalIndex = 0;
+
       int goalId;
-      goalId = goalList[0].Id;
+      goalId = goalList[firstGoalIndex].Id;
+
+      double addAmount;
+      addAmount = 200.0;
 
       bool isOk;
-      isOk = savingsService.TryAddMoney(goalId, 200.0, out errorMessage);
+      isOk = savingsService.TryAddMoney(goalId, addAmount, out errorMessage);
 
       Assert.IsTrue(isOk, errorMessage);
 
@@ -79,7 +112,10 @@ namespace Budget_App.Tests.Services {
       double expectedAmount;
       expectedAmount = 200.0;
 
-      Assert.AreEqual(expectedAmount, goal.CurrentAmount, 0.001);
+      double delta;
+      delta = 0.001;
+
+      Assert.AreEqual(expectedAmount, goal.CurrentAmount, delta);
     }
   }
 }

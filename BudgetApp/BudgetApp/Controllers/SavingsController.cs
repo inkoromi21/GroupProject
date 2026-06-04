@@ -131,11 +131,15 @@ namespace Budget_App.Controllers {
       if (!isOk) {
         Console.WriteLine(errorMessage);
       } else {
-        double percent;
-        percent = savingsService.GetProgressPercent(goalId);
-        string percentText;
-        percentText = percent.ToString("0.0", CultureInfo.InvariantCulture);
-        Console.WriteLine("Готово. Прогресс: " + percentText + "%");
+        double progressPercent;
+        progressPercent = savingsService.GetProgressPercent(goalId);
+
+        string progressText;
+        progressText = progressPercent.ToString("0.0", CultureInfo.InvariantCulture);
+
+        string resultLine;
+        resultLine = "Готово. Прогресс: " + progressText + "%";
+        Console.WriteLine(resultLine);
       }
       Console.WriteLine();
     }

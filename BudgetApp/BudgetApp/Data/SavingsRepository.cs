@@ -23,7 +23,7 @@ namespace Budget_App.Data {
           command.Parameters.AddWithValue("$name", goal.Name);
           command.Parameters.AddWithValue("$target", goal.TargetAmount);
           command.Parameters.AddWithValue("$current", goal.CurrentAmount);
-          command.Parameters.AddWithValue("$deadline", goal.Deadline.ToString("O"));
+          command.Parameters.AddWithValue("$deadline", goal.Deadline.ToString("o"));
 
           object insertResult;
           insertResult = command.ExecuteScalar();
@@ -126,12 +126,23 @@ namespace Budget_App.Data {
     }
 
     private static SavingsGoal ReadGoal(SQLiteDataReader reader) {
-      int columnId = 0;
-      int columnBudgetId = 1;
-      int columnName = 2;
-      int columnTargetAmount = 3;
-      int columnCurrentAmount = 4;
-      int columnDeadline = 5;
+      int columnId;
+      columnId = 0;
+
+      int columnBudgetId;
+      columnBudgetId = 1;
+
+      int columnName;
+      columnName = 2;
+
+      int columnTargetAmount;
+      columnTargetAmount = 3;
+
+      int columnCurrentAmount;
+      columnCurrentAmount = 4;
+
+      int columnDeadline;
+      columnDeadline = 5;
 
       SavingsGoal goal;
       goal = new SavingsGoal();
@@ -145,15 +156,32 @@ namespace Budget_App.Data {
     }
 
     private static Budget ReadBudget(SQLiteDataReader reader) {
-      int columnId = 0;
-      int columnName = 1;
-      int columnType = 2;
-      int columnTotalLimit = 3;
-      int columnPeriodStart = 4;
-      int columnPeriodEnd = 5;
-      int columnCreatedAt = 6;
-      int columnIsActive = 7;
-      int activeFlagValue = 1;
+      int columnId;
+      columnId = 0;
+
+      int columnName;
+      columnName = 1;
+
+      int columnType;
+      columnType = 2;
+
+      int columnTotalLimit;
+      columnTotalLimit = 3;
+
+      int columnPeriodStart;
+      columnPeriodStart = 4;
+
+      int columnPeriodEnd;
+      columnPeriodEnd = 5;
+
+      int columnCreatedAt;
+      columnCreatedAt = 6;
+
+      int columnIsActive;
+      columnIsActive = 7;
+
+      int activeFlagValue;
+      activeFlagValue = 1;
 
       Budget budget;
       budget = new Budget();

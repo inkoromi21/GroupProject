@@ -14,30 +14,48 @@ namespace Budget_App.Tests.Observers {
 
     [TestMethod]
     public void Notify_AfterAttach_CallsUpdateOnce() {
-      BudgetSubject subject = new BudgetSubject();
-      TestObserver observer = new TestObserver();
+      BudgetSubject subject;
+      subject = new BudgetSubject();
+
+      TestObserver observer;
+      observer = new TestObserver();
+
       subject.Attach(observer);
 
-      BudgetEventArgs eventArgs = new BudgetEventArgs();
+      BudgetEventArgs eventArgs;
+      eventArgs = new BudgetEventArgs();
       eventArgs.message = "test";
       eventArgs.eventType = BudgetEventType.BudgetCreated;
+
       subject.Notify(eventArgs);
 
-      Assert.AreEqual(1, observer.updateCount);
+      int expectedCount;
+      expectedCount = 1;
+
+      Assert.AreEqual(expectedCount, observer.updateCount);
     }
 
     [TestMethod]
     public void Notify_AfterDetach_DoesNotCallUpdate() {
-      BudgetSubject subject = new BudgetSubject();
-      TestObserver observer = new TestObserver();
+      BudgetSubject subject;
+      subject = new BudgetSubject();
+
+      TestObserver observer;
+      observer = new TestObserver();
+
       subject.Attach(observer);
       subject.Detach(observer);
 
-      BudgetEventArgs eventArgs = new BudgetEventArgs();
+      BudgetEventArgs eventArgs;
+      eventArgs = new BudgetEventArgs();
       eventArgs.message = "test";
+
       subject.Notify(eventArgs);
 
-      Assert.AreEqual(0, observer.updateCount);
+      int expectedCount;
+      expectedCount = 0;
+
+      Assert.AreEqual(expectedCount, observer.updateCount);
     }
   }
 }
